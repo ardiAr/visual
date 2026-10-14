@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisasi Linked List C++</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-line { transition: all 0.2s ease; }
+        .code-line.active { background-color: rgba(59, 130, 246, 0.25); border-left: 4px solid #3b82f6; }
+        .node-box { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .arrow-line { stroke: #cbd5e1; stroke-width: 2; transition: all 0.3s; }
+        .arrow-line.highlight { stroke: #3b82f6; stroke-width: 3; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-xl shadow-inner">
+                    <i class="fa-solid fa-link text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white">Visualizer Linked List C++</h1>
+                    <p class="text-xs text-slate-400">Eksplorasi interaktif memori pointer dan traversal node berdasarkan kode C++</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/50">
+                <span class="text-xs text-slate-400 px-2 font-medium">Kecepatan:</span>
+                <button onclick="setSpeed(1000)" id="speed-1" class="px-2.5 py-1 text-xs rounded-lg bg-slate-700 text-white font-medium transition hover:bg-slate-600">Normal</button>
+                <button onclick="setSpeed(500)" id="speed-2" class="px-2.5 py-1 text-xs rounded-lg text-slate-400 font-medium transition hover:bg-slate-700">Cepat</button>
+                <button onclick="setSpeed(2000)" id="speed-3" class="px-2.5 py-1 text-xs rounded-lg text-slate-400 font-medium transition hover:bg-slate-700">Lambat</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Column: Code Viewer & Explanation -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Code Viewer Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="bg-slate-850 px-4 py-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        <span class="text-xs font-mono text-slate-400 ml-2">main.cpp</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-medium">C++ Standard</span>
+                </div>
+                <div class="p-4 font-mono text-xs sm:text-sm overflow-x-auto bg-slate-950/60 leading-relaxed text-slate-300 select-none">
+                    <div id="line-1" class="code-line px-2 py-0.5 rounded">#include &lt;iostream&gt;</div>
+                    <div id="line-2" class="code-line px-2 py-0.5 rounded">using namespace std;</div>
+                    <div id="line-3" class="code-line px-2 py-0.5 rounded">&nbsp;</div>
+                    <div id="line-4" class="code-line px-2 py-0.5 rounded">struct Node {</div>
+                    <div id="line-5" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; int data;</div>
+                    <div id="line-6" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; Node* next;</div>
+                    <div id="line-7" class="code-line px-2 py-0.5 rounded">};</div>
+                    <div id="line-8" class="code-line px-2 py-0.5 rounded">&nbsp;</div>
+                    <div id="line-9" class="code-line px-2 py-0.5 rounded">int main() {</div>
+                    <div id="line-10" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; <span class="text-slate-500">// 1. Buat 3 node kosong</span></div>
+                    <div id="line-11" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; Node* head = new Node();</div>
+                    <div id="line-12" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; Node* second = new Node();</div>
+                    <div id="line-13" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; Node* third = new Node();</div>
+                    <div id="line-14" class="code-line px-2 py-0.5 rounded">&nbsp;</div>
+                    <div id="line-15" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; <span class="text-slate-500">// 2. Isi data &amp; sambungkan</span></div>
+                    <div id="line-16" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; head-&gt;data = 10;</div>
+                    <div id="line-17" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; head-&gt;next = second;</div>
+                    <div id="line-18" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; second-&gt;data = 20;</div>
+                    <div id="line-19" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; second-&gt;next = third;</div>
+                    <div id="line-20" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; third-&gt;data = 30;</div>
+                    <div id="line-21" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; third-&gt;next = NULL;</div>
+                    <div id="line-22" class="code-line px-2 py-0.5 rounded">&nbsp;</div>
+                    <div id="line-23" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; <span class="text-slate-500">// 3. Cetak isi linked list</span></div>
+                    <div id="line-24" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; Node* temp = head;</div>
+                    <div id="line-25" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; while (temp != NULL) {</div>
+                    <div id="line-26" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; &nbsp; &nbsp; cout &lt;&lt; temp-&gt;data &lt;&lt; &quot; -&gt; &quot;;</div>
+                    <div id="line-27" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; &nbsp; &nbsp; temp = temp-&gt;next;</div>
+                    <div id="line-28" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; }</div>
+                    <div id="line-29" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; cout &lt;&lt; &quot;NULL&quot; &lt;&lt; endl;</div>
+                    <div id="line-30" class="code-line px-2 py-0.5 rounded">&nbsp; &nbsp; return 0;</div>
+                    <div id="line-31" class="code-line px-2 py-0.5 rounded">}</div>
+                </div>
+            </div>
+
+            <!-- Explanation & Console Log Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-circle-info text-blue-400"></i>
+                        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-300">Penjelasan Langkah</h2>
+                    </div>
+                    <p id="step-description" class="text-sm text-slate-300 leading-relaxed bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/80">
+                        Klik tombol "Mulai" atau "Next" untuk menjalankan visualisasi baris per baris dari kode C++ linked list.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-terminal text-emerald-400"></i>
+                            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Console Output (stdout)</h3>
+                        </div>
+                        <button onclick="clearConsole()" class="text-[10px] text-slate-500 hover:text-slate-300 underline">Bersihkan</button>
+                    </div>
+                    <div id="console-output" class="bg-black/80 font-mono text-emerald-400 text-xs p-3.5 rounded-xl border border-slate-800/80 h-24 overflow-y-auto flex flex-col gap-1 shadow-inner">
+                        <span class="text-slate-600 italic">// Output program akan muncul di sini...</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Visualizer Canvas & Controls -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+            
+            <!-- Main Visualizer Display Area -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col min-h-[480px] relative overflow-hidden">
+                
+                <!-- Background grid pattern -->
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+
+                <!-- Top indicators: Pointers state -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6 relative z-10 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-semibold text-slate-400">POINTER STACK:</span>
+                        <div class="flex items-center gap-2">
+                            <span id="badge-head" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700 transition-all">head: NULL</span>
+                            <span id="badge-second" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700 transition-all">second: NULL</span>
+                            <span id="badge-third" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700 transition-all">third: NULL</span>
+                            <span id="badge-temp" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700 transition-all">temp: NULL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory Nodes Area -->
+                <div class="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 relative z-10 py-6 my-auto">
+                    
+                    <!-- Node 1 (Head) -->
+                    <div id="node-1-container" class="opacity-30 scale-95 transition-all duration-500 flex flex-col items-center">
+                        <span class="text-[11px] font-mono text-blue-400 mb-1 font-semibold tracking-wider">0x1000 (Heap)</span>
+                        <div class="node-box w-48 bg-slate-950 border-2 border-slate-700 rounded-xl overflow-hidden shadow-2xl">
+                            <div class="bg-slate-900 px-3 py-1.5 border-b border-slate-800 flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-300">Node 1</span>
+                                <span id="label-head-ptr" class="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 rounded font-mono hidden">head</span>
+                            </div>
+                            <div class="p-3 grid grid-cols-2 gap-2 text-center font-mono text-xs">
+                                <div class="bg-slate-900 p-2 rounded border border-slate-800 flex flex-col justify-center">
+                                    <span class="text-[10px] text-slate-500">data</span>
+                                    <span id="node-1-data" class="text-white font-bold text-sm mt-0.5">?</span>
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded border border-slate-800 flex flex-col justify-center">
+                                    <span class="text-[10px] text-slate-500">next</span>
+                                    <span id="node-1-next" class="text-slate-400 text-xs mt-0.5">NULL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow 1 -> 2 -->
+                    <div class="hidden md:flex items-center justify-center w-12">
+                        <svg class="w-12 h-6" viewBox="0 0 48 24">
+                            <path id="arrow-1-2" d="M 0 12 L 36 12" stroke="#334155" stroke-width="3" stroke-dasharray="4 4" fill="none" />
+                            <polygon id="arrowhead-1-2" points="36,8 44,12 36,16" fill="#334155" />
+                        </svg>
+                    </div>
+
+                    <!-- Node 2 (Second) -->
+                    <div id="node-2-container" class="opacity-30 scale-95 transition-all duration-500 flex flex-col items-center">
+                        <span class="text-[11px] font-mono text-purple-400 mb-1 font-semibold tracking-wider">0x2000 (Heap)</span>
+                        <div class="node-box w-48 bg-slate-950 border-2 border-slate-700 rounded-xl overflow-hidden shadow-2xl">
+                            <div class="bg-slate-900 px-3 py-1.5 border-b border-slate-800 flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-300">Node 2</span>
+                                <span id="label-second-ptr" class="text-[10px] bg-purple-500/20 text-purple-400 px-1.5 rounded font-mono hidden">second</span>
+                            </div>
+                            <div class="p-3 grid grid-cols-2 gap-2 text-center font-mono text-xs">
+                                <div class="bg-slate-900 p-2 rounded border border-slate-800 flex flex-col justify-center">
+                                    <span class="text-[10px] text-slate-500">data</span>
+                                    <span id="node-2-data" class="text-white font-bold text-sm mt-0.5">?</span>
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded border border-slate-800 flex flex-col justify-center">
+                                    <span class="text-[10px] text-slate-500">next</span>
+                                    <span id="node-2-next" class="text-slate-400 text-xs mt-0.5">NULL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow 2 -> 3 -->
+                    <div class="hidden md:flex items-center justify-center w-12">
+                        <svg class="w-12 h-6" viewBox="0 0 48 24">
+                            <path id="arrow-2-3" d="M 0 12 L 36 12" stroke="#334155" stroke-width="3" stroke-dasharray="4 4" fill="none" />
+                            <polygon id="arrowhead-2-3" points="36,8 44,12 36,16" fill="#334155" />
+                        </svg>
+                    </div>
+
+                    <!-- Node 3 (Third) -->
+                    <div id="node-3-container" class="opacity-30 scale-95 transition-all duration-500 flex flex-col items-center">
+                        <span class="text-[11px] font-mono text-emerald-400 mb-1 font-semibold tracking-wider">0x3000 (Heap)</span>
+                        <div class="node-box w-48 bg-slate-950 border-2 border-slate-700 rounded-xl overflow-hidden shadow-2xl">
+                            <div class="bg-slate-900 px-3 py-1.5 border-b border-slate-800 flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-300">Node 3</span>
+                                <span id="label-third-ptr" class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 rounded font-mono hidden">third</span>
+                            </div>
+                            <div class="p-3 grid grid-cols-2 gap-2 text-center font-mono text-xs">
+                                <div class="bg-slate-900 p-2 rounded border border-slate-800 flex flex-col justify-center">
+                                    <span class="text-[10px] text-slate-500">data</span>
+                                    <span id="node-3-data" class="text-white font-bold text-sm mt-0.5">?</span>
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded border border-slate-800 flex flex-col justify-center">
+                                    <span class="text-[10px] text-slate-500">next</span>
+                                    <span id="node-3-next" class="text-slate-400 text-xs mt-0.5">NULL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Temp pointer highlight overlay if active -->
+                <div id="temp-pointer-indicator" class="absolute bottom-20 left-1/2 -translate-x-1/2 bg-amber-500/10 border border-amber-500/40 text-amber-300 px-4 py-1.5 rounded-full text-xs font-mono font-semibold shadow-lg hidden items-center gap-2">
+                    <i class="fa-solid fa-location-arrow animate-bounce"></i>
+                    <span id="temp-indicator-text">temp menunjuk ke Node 1</span>
+                </div>
+
+                <!-- Progress Bar & Step info -->
+                <div class="mt-auto pt-4 border-t border-slate-800 flex flex-col gap-2 relative z-10">
+                    <div class="flex justify-between items-center text-xs text-slate-400">
+                        <span id="progress-text">Langkah 0 dari 15</span>
+                        <span id="step-name" class="font-medium text-slate-300">Siap</span>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                        <div id="progress-bar" class="bg-blue-600 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Interactive Control Bar -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <button onclick="resetSimulation()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-2 border border-slate-700/60 shadow-sm">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                    <button onclick="prevStep()" id="btn-prev" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 text-xs font-semibold transition flex items-center gap-2 border border-slate-700/60 shadow-sm" disabled>
+                        <i class="fa-solid fa-backward-step"></i> Sebelumnya
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="togglePlay()" id="btn-play" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-blue-600/30">
+                        <i id="play-icon" class="fa-solid fa-play"></i> <span id="play-text">Putar Otomatis</span>
+                    </button>
+                    <button onclick="nextStep()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-white text-slate-950 text-xs font-bold transition flex items-center gap-2 shadow-lg">
+                        Selanjutnya <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Simulation state definition
+        let currentStepIndex = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        let animationSpeed = 1000;
+
+        // Script steps mapping to lines and visual state
+        const steps = [
+            {
+                line: 9,
+                desc: "Fungsi utama (main) dimulai. Eksekusi program C++ dimulai dari sini.",
+                state: { head: "NULL", second: "NULL", third: "NULL", temp: "NULL", n1Active: false, n2Active: false, n3Active: false, n1Data: "?", n2Data: "?", n3Data: "?", n1Next: "NULL", n2Next: "NULL", n3Next: "NULL", conn12: false, conn23: false, tempPos: null }
+            },
+            {
+                line: 11,
+                desc: "Node* head = new Node(); -> Alokasi memori dinamis di heap untuk node pertama. Pointer 'head' menyimpan alamat memori 0x1000.",
+                state: { head: "0x1000", second: "NULL", third: "NULL", temp: "NULL", n1Active: true, n2Active: false, n3Active: false, n1Data: "?", n2Data: "?", n3Data: "?", n1Next: "NULL", n2Next: "NULL", n3Next: "NULL", conn12: false, conn23: false, tempPos: null }
+            },
+            {
+                line: 12,
+                desc: "Node* second = new Node(); -> Alokasi node kedua di heap dengan alamat memori 0x2000.",
+                state: { head: "0x1000", second: "0x2000", third: "NULL", temp: "NULL", n1Active: true, n2Active: true, n3Active: false, n1Data: "?", n2Data: "?", n3Data: "?", n1Next: "NULL", n2Next: "NULL", n3Next: "NULL", conn12: false, conn23: false, tempPos: null }
+            },
+            {
+                line: 13,
+                desc: "Node* third = new Node(); -> Alokasi node ketiga di heap dengan alamat memori 0x3000.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "?", n2Data: "?", n3Data: "?", n1Next: "NULL", n2Next: "NULL", n3Next: "NULL", conn12: false, conn23: false, tempPos: null }
+            },
+            {
+                line: 16,
+                desc: "head->data = 10; -> Mengisi nilai data pada node pertama (head) dengan angka 10.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "?", n3Data: "?", n1Next: "NULL", n2Next: "NULL", n3Next: "NULL", conn12: false, conn23: false, tempPos: null }
+            },
+            {
+                line: 17,
+                desc: "head->next = second; -> Pointer 'next' pada node pertama diisi alamat node kedua (0x2000), membentuk rantai koneksi pertama.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "?", n3Data: "?", n1Next: "0x2000", n2Next: "NULL", n3Next: "NULL", conn12: true, conn23: false, tempPos: null }
+            },
+            {
+                line: 18,
+                desc: "second->data = 20; -> Mengisi nilai data pada node kedua dengan angka 20.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "?", n1Next: "0x2000", n2Next: "NULL", n3Next: "NULL", conn12: true, conn23: false, tempPos: null }
+            },
+            {
+                line: 19,
+                desc: "second->next = third; -> Pointer 'next' pada node kedua diisi alamat node ketiga (0x3000), menyambungkan node 2 ke node 3.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "?", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            },
+            {
+                line: 20,
+                desc: "third->data = 30; -> Mengisi nilai data pada node ketiga dengan angka 30.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            },
+            {
+                line: 21,
+                desc: "third->next = NULL; -> Node terakhir menunjuk ke NULL sebagai tanda akhir linked list.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            },
+            {
+                line: 24,
+                desc: "Node* temp = head; -> Membuat pointer bantu 'temp' dan mengarahkannya ke 'head' (Node 1) untuk memulai traversal.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x1000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 1 }
+            },
+            {
+                line: 25,
+                desc: "while (temp != NULL) -> Periksa apakah temp menunjuk ke node. Karena temp (0x1000) != NULL, loop dilanjutkan.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x1000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 1 }
+            },
+            {
+                line: 26,
+                desc: "cout << temp->data << \" -> \"; -> Mencetak data node saat ini (10) ke layar.",
+                consoleLog: "10 -> ",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x1000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 1 }
+            },
+            {
+                line: 27,
+                desc: "temp = temp->next; -> Memindahkan pointer 'temp' ke node berikutnya (Node 2 / 0x2000).",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x2000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 2 }
+            },
+            {
+                line: 25,
+                desc: "while (temp != NULL) -> temp (0x2000) != NULL, loop iterasi kedua dimulai.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x2000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 2 }
+            },
+            {
+                line: 26,
+                desc: "cout << temp->data << \" -> \"; -> Mencetak data node kedua (20) ke layar.",
+                consoleLog: "20 -> ",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x2000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 2 }
+            },
+            {
+                line: 27,
+                desc: "temp = temp->next; -> Memindahkan pointer 'temp' ke node ketiga (0x3000).",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x3000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 3 }
+            },
+            {
+                line: 25,
+                desc: "while (temp != NULL) -> temp (0x3000) != NULL, loop iterasi ketiga dimulai.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x3000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 3 }
+            },
+            {
+                line: 26,
+                desc: "cout << temp->data << \" -> \"; -> Mencetak data node ketiga (30) ke layar.",
+                consoleLog: "30 -> ",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "0x3000", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: 3 }
+            },
+            {
+                line: 27,
+                desc: "temp = temp->next; -> temp menunjuk ke third->next, yaitu NULL.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            },
+            {
+                line: 25,
+                desc: "while (temp != NULL) -> temp bernilai NULL, loop while selesai.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            },
+            {
+                line: 29,
+                desc: "cout << \"NULL\" << endl; -> Mencetak string \"NULL\" ke layar sebagai penutup.",
+                consoleLog: "NULL\n",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            },
+            {
+                line: 30,
+                desc: "return 0; -> Program selesai dieksekusi dengan sukses.",
+                state: { head: "0x1000", second: "0x2000", third: "0x3000", temp: "NULL", n1Active: true, n2Active: true, n3Active: true, n1Data: "10", n2Data: "20", n3Data: "30", n1Next: "0x2000", n2Next: "0x3000", n3Next: "NULL", conn12: true, conn23: true, tempPos: null }
+            }
+        ];
+
+        let loggedMessages = [];
+
+        function updateUI() {
+            const current = steps[currentStepIndex];
+
+            // Highlight active code line
+            document.querySelectorAll('.code-line').forEach(el => el.classList.remove('active'));
+            const activeLineEl = document.getElementById(`line-${current.line}`);
+            if (activeLineEl) {
+                activeLineEl.classList.add('active');
+                activeLineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // Update explanation text
+            document.getElementById('step-description').innerText = current.desc;
+            document.getElementById('step-name').innerText = `Baris ${current.line} (${currentStepIndex + 1}/${steps.length})`;
+            document.getElementById('progress-text').innerText = `Langkah ${currentStepIndex + 1} dari ${steps.length}`;
+            
+            const progressPercent = ((currentStepIndex + 1) / steps.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            // Update button states
+            document.getElementById('btn-prev').disabled = currentStepIndex === 0;
+            document.getElementById('btn-next').disabled = currentStepIndex === steps.length - 1;
+
+            // Handle console log
+            if (current.consoleLog) {
+                loggedMessages.push(current.consoleLog);
+                renderConsole();
+            }
+
+            // Apply visual node states
+            const s = current.state;
+            
+            // Stack Badges
+            updateBadge('badge-head', 'head', s.head);
+            updateBadge('badge-second', 'second', s.second);
+            updateBadge('badge-third', 'third', s.third);
+            updateBadge('badge-temp', 'temp', s.temp);
+
+            // Node containers opacity & scale
+            setNodeContainer('node-1-container', s.n1Active);
+            setNodeContainer('node-2-container', s.n2Active);
+            setNodeContainer('node-3-container', s.n3Active);
+
+            // Node contents
+            document.getElementById('node-1-data').innerText = s.n1Data;
+            document.getElementById('node-2-data').innerText = s.n2Data;
+            document.getElementById('node-3-data').innerText = s.n3Data;
+
+            document.getElementById('node-1-next').innerText = s.n1Next;
+            document.getElementById('node-2-next').innerText = s.n2Next;
+            document.getElementById('node-3-next').innerText = s.n3Next;
+
+            // Pointers badges inside node headers
+            toggleDisplay('label-head-ptr', s.head !== 'NULL');
+            toggleDisplay('label-second-ptr', s.second !== 'NULL');
+            toggleDisplay('label-third-ptr', s.third !== 'NULL');
+
+            // Connective Arrows
+            setArrow('arrow-1-2', 'arrowhead-1-2', s.conn12);
+            setArrow('arrow-2-3', 'arrowhead-2-3', s.conn23);
+
+            // Temp pointer indicator overlay
+            const tempIndicator = document.getElementById('temp-pointer-indicator');
+            if (s.tempPos !== null) {
+                tempIndicator.classList.remove('hidden');
+                tempIndicator.classList.add('flex');
+                document.getElementById('temp-indicator-text').innerText = `temp sedang menunjuk ke Node ${s.tempPos} (${s.temp})`;
+            } else {
+                tempIndicator.classList.add('hidden');
+                tempIndicator.classList.remove('flex');
+            }
+        }
+
+        function updateBadge(id, name, val) {
+            const el = document.getElementById(id);
+            el.innerText = `${name}: ${val}`;
+            if (val !== 'NULL') {
+                el.className = "px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-blue-600/20 text-blue-400 border border-blue-500/40 shadow-sm transition-all";
+            } else {
+                el.className = "px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700 transition-all";
+            }
+        }
+
+        function setNodeContainer(id, active) {
+            const el = document.getElementById(id);
+            if (active) {
+                el.classList.remove('opacity-30', 'scale-95');
+                el.classList.add('opacity-100', 'scale-100');
+            } else {
+                el.classList.add('opacity-30', 'scale-95');
+                el.classList.remove('opacity-100', 'scale-100');
+            }
+        }
+
+        function toggleDisplay(id, show) {
+            const el = document.getElementById(id);
+            if (show) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+
+        function setArrow(pathId, headId, active) {
+            const path = document.getElementById(pathId);
+            const head = document.getElementById(headId);
+            if (active) {
+                path.setAttribute('stroke', '#3b82f6');
+                path.setAttribute('stroke-dasharray', 'none');
+                head.setAttribute('fill', '#3b82f6');
+            } else {
+                path.setAttribute('stroke', '#334155');
+                path.setAttribute('stroke-dasharray', '4 4');
+                head.setAttribute('fill', '#334155');
+            }
+        }
+
+        function renderConsole() {
+            const consoleEl = document.getElementById('console-output');
+            let html = '';
+            loggedMessages.forEach(msg => {
+                html += `<span>${msg}</span>`;
+            });
+            consoleEl.innerHTML = html || '<span class="text-slate-600 italic">// Output program akan muncul di sini...</span>';
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function clearConsole() {
+            loggedMessages = [];
+            renderConsole();
+        }
+
+        function nextStep() {
+            if (currentStepIndex < steps.length - 1) {
+                currentStepIndex++;
+                updateUI();
+            } else {
+                pausePlay();
+            }
+        }
+
+        function prevStep() {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                // Rebuild console log up to current step
+                loggedMessages = [];
+                for (let i = 0; i <= currentStepIndex; i++) {
+                    if (steps[i].consoleLog) {
+                        loggedMessages.push(steps[i].consoleLog);
+                    }
+                }
+                renderConsole();
+                updateUI();
+            }
+        }
+
+        function resetSimulation() {
+            pausePlay();
+            currentStepIndex = 0;
+            loggedMessages = [];
+            renderConsole();
+            updateUI();
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                pausePlay();
+            } else {
+                startPlay();
+            }
+        }
+
+        function startPlay() {
+            isPlaying = true;
+            document.getElementById('play-icon').className = "fa-solid fa-pause";
+            document.getElementById('play-text').innerText = "Jeda";
+            
+            if (currentStepIndex >= steps.length - 1) {
+                currentStepIndex = 0;
+                loggedMessages = [];
+                renderConsole();
+            }
+
+            playInterval = setInterval(() => {
+                if (currentStepIndex < steps.length - 1) {
+                    nextStep();
+                } else {
+                    pausePlay();
+                }
+            }, animationSpeed);
+        }
+
+        function pausePlay() {
+            isPlaying = false;
+            clearInterval(playInterval);
+            document.getElementById('play-icon').className = "fa-solid fa-play";
+            document.getElementById('play-text').innerText = "Putar Otomatis";
+        }
+
+        function setSpeed(ms) {
+            animationSpeed = ms;
+            ['speed-1', 'speed-2', 'speed-3'].forEach(id => {
+                document.getElementById(id).className = "px-2.5 py-1 text-xs rounded-lg text-slate-400 font-medium transition hover:bg-slate-700";
+            });
+            if (ms === 1000) document.getElementById('speed-1').className = "px-2.5 py-1 text-xs rounded-lg bg-slate-700 text-white font-medium transition hover:bg-slate-600";
+            if (ms === 500) document.getElementById('speed-2').className = "px-2.5 py-1 text-xs rounded-lg bg-slate-700 text-white font-medium transition hover:bg-slate-600";
+            if (ms === 2000) document.getElementById('speed-3').className = "px-2.5 py-1 text-xs rounded-lg bg-slate-700 text-white font-medium transition hover:bg-slate-600";
+
+            if (isPlaying) {
+                clearInterval(playInterval);
+                playInterval = setInterval(() => {
+                    if (currentStepIndex < steps.length - 1) {
+                        nextStep();
+                    } else {
+                        pausePlay();
+                    }
+                }, animationSpeed);
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateUI();
+        };
+    </script>
+</body>
+</html>
