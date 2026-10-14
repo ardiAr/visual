@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual — Live Linked List C++</title>
+<link rel="stylesheet" href="live-preview.css">
+</head>
+<body>
+<header><h1>Visual — Linked List C++</h1><span id="status">Loading...</span></header>
+<main>
+<section class="editor"><h2>main.cpp</h2><textarea id="code" aria-label="Kode C++" spellcheck="false"></textarea><form id="tools"><button type="button" id="restore">Reset kode</button><button type="button" id="export">E{spor kode</button><label>Impor <input type="file" id="import" accept=".cpp,.cc,.txt"></label></form></section>
+<section class="preview"><h2>Visualisasi memori</h2><div id="pointers"></div><div id="canvas"></div><div class="transport"><button id="reset" aria-label="Uulang dari awal">↺</button><button id="prev" aria-label="Langkah sebelumnya">‹‹</button><button id="play">Jalankan</button><button id="next" aria-label="Langkah berikutnya">››</button><label>Kecepatan <select id="speed"><option value="1800">0.5×</option><option value="900" selected>1×</option><option value="450">2×</option></select></label></div><input id="timeline" type="range" min="0" value="0" aria-label="Posisi eksekusi"><p id="location"></p><pre id="error" role="alert"></pre><pre id="description"></pre><h2>Console <small>stdout</small></h2><pre id="output"></pre></section>
+</main>
+<footer>Alamat memori simulasi · Subset C++: Node*, data, next, while, cout, delete · Bukan compiler C++ penuh · <a href="visualisasi_linked_list_c.html">Versi lama</a></footer>
+<script type="module" src="live-preview.js"></script>
+</body>
+</html>
